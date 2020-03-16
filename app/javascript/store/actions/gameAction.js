@@ -2,7 +2,6 @@ import { GET_THINGS_REQUEST, GET_THINGS_SUCCESS } from "../types";
 
 export const getThings = () => {
   return dispatch => {
-    debugger;
     dispatch({ type: GET_THINGS_REQUEST });
     return fetch(`v1/game.json`)
       .then(response => response.json())

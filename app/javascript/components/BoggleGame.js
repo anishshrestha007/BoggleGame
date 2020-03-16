@@ -6,7 +6,6 @@ import { getThings } from "../store/actions/gameAction";
 class BoggleGame extends React.Component {
   componentDidMount() {}
   render() {
-    debugger;
     const { things } = this.props;
     const thingsList =
       things &&
