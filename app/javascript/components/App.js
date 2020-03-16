@@ -15,7 +15,7 @@ class App extends React.Component {
       <Provider store={store}>
         <BrowserRouter>
           <Switch>
-            <div className='app'>
+            <div className="app">
               <Image src={GameLogo} centered />
               <Route exact path="/" render={() => <DashBoard />} />
               <Route
