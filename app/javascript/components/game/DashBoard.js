@@ -30,7 +30,7 @@ class DashBoard extends React.Component {
   handleDropDownChange = (e, data) => {
     this.setState({ size: data.value });
   };
-  handleSubmit = (event, data) => {
+  handleStartGame = (event, data) => {
     const { userName, size } = this.state;
     const history = this.props.history;
     if (userName) {
@@ -76,7 +76,7 @@ class DashBoard extends React.Component {
             </div>
             <div className="center-wrapper">
               <Button
-                onClick={this.handleSubmit}
+                onClick={this.handleStartGame}
                 basic
                 color="green"
                 icon="play"
