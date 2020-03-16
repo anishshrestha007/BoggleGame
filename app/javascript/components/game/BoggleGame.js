@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
-import { getThings } from "../store/actions/gameAction";
+import { getThings } from "../../store/actions/gameAction";
 class BoggleGame extends React.Component {
   componentDidMount() {}
   render() {
