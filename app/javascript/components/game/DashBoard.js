@@ -1,10 +1,17 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Input, Header, Card, Icon } from "semantic-ui-react";
+import { Input, Card, Icon, Dropdown, Divider, Label } from "semantic-ui-react";
+import "../css/DashBoard.css";
+
+const gameOptions = [
+  { key: "4", value: "4", text: "4 * 4" },
+  { key: "5", value: "5", text: "5 * 5" },
+  { key: "6", value: "6", text: "6 * 6" }
+];
 class DashBoard extends React.Component {
   render() {
     return (
-      <React.Fragment>
+      <div className='dashboard-main'>
         <Card centered color="orange" raised={true}>
           <Card.Content>
             <Card.Header color="orange"> Boggle Game </Card.Header>
@@ -19,12 +26,24 @@ class DashBoard extends React.Component {
             <Input
               icon="user"
               iconPosition="left"
-              label="UserName"
               placeholder="Enter you name here"
             />
+            <Divider />
+            <div className='rowC'>
+           
+            <Dropdown
+              placeholder="Select Board Size"
+              fluid
+              selection
+              options={gameOptions}
+            />
+             <Label  >
+               Size
+            </Label>
+            </div>
           </Card.Content>
         </Card>
-      </React.Fragment>
+      </div>
     );
   }
 }

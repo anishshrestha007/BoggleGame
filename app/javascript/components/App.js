@@ -7,7 +7,7 @@ import configureStore from "../store/configureStore";
 import DashBoard from "./game/DashBoard";
 import GameLogo from "../../assets/images/GameLogo.png";
 import { Image } from "semantic-ui-react";
-
+import "./css/App.css";
 const store = configureStore();
 class App extends React.Component {
   render() {
@@ -15,14 +15,14 @@ class App extends React.Component {
       <Provider store={store}>
         <BrowserRouter>
           <Switch>
-            <React.Fragment>
-              <Image src={GameLogo} wrapped ui={false} />
+            <div className='app'>
+              <Image src={GameLogo} centered />
               <Route exact path="/" render={() => <DashBoard />} />
               <Route
                 path="/game"
                 render={() => <BoogleGame boggleParam="Hello from game!" />}
               />
-            </React.Fragment>
+            </div>
           </Switch>
         </BrowserRouter>
       </Provider>
