@@ -1,3 +1,4 @@
+// Reference : https://reacttraining.com/react-router/web/example/auth-workflow
 import React from "react";
 import DashBoard from "./game/DashBoard";
 import BoggleGame from "./game/BoggleGame";
