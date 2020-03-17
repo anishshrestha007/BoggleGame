@@ -1,15 +1,18 @@
-import { GET_THINGS_REQUEST, GET_THINGS_SUCCESS } from "../types";
+import { START_GAME } from "../types";
 
-export const initialState = {};
+export const initialState = {
+  gameInfo: {
+    userName: "",
+    size: 4
+  }
+};
 
 export function gameReducer(state = initialState, action) {
   switch (action.type) {
-    case GET_THINGS_REQUEST:
-      return state;
-    case GET_THINGS_SUCCESS:
+    case START_GAME:
       return {
         ...state,
-        things: action.json.things
+        gameInfo: action.gameInfo
       };
 
     default:

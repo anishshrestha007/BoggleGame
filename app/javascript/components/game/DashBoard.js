@@ -10,6 +10,9 @@ import {
   Button
 } from "semantic-ui-react";
 import "../css/DashBoard.css";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+import { startGame } from "../../store/actions/gameAction";
 
 const gameOptions = [
   { key: "4", value: 4, text: "4 * 4" },
@@ -32,13 +35,18 @@ class DashBoard extends React.Component {
   };
   handleStartGame = (event, data) => {
     const { userName, size } = this.state;
-    const history = this.props.history;
+    var history = this.props.history;
+    var me = this;
     if (userName) {
-      var gameObj = {
+      var gameInfo = {
         userName,
         size
       };
     }
+    this.props.startGame &&
+      this.props.startGame(gameInfo, () => {
+        history.push("/BoggleGame");
+      });
   };
   render() {
     return (
@@ -90,4 +98,8 @@ class DashBoard extends React.Component {
   }
 }
 
-export default DashBoard;
+const structuredSelector = createStructuredSelector({
+  gameInfo: state => state.game.gameInfo
+});
+const mapDispatchToProps = { startGame };
+export default connect(structuredSelector, mapDispatchToProps)(DashBoard);
