@@ -1,13 +1,14 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
 
-function PrivateRoute({ component: Component, game: game, ...rest }) {
-  debugger;
+function PrivateRoute({ component: Component, gameStore: gameStore, ...rest }) {
   return (
     <Route
       {...rest}
-      render={prop =>
-        game.gameInfo.userName ? (
+      render={prop => {
+        let _gameState = gameStore.getState();
+        const gameInfo = _gameState.game.gameInfo;
+        return gameInfo.userName ? (
           <Component {...prop} />
         ) : (
           <Redirect
@@ -19,8 +20,8 @@ function PrivateRoute({ component: Component, game: game, ...rest }) {
               children: prop.children
             }}
           />
-        )
-      }
+        );
+      }}
     />
   );
 }

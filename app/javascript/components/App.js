@@ -33,7 +33,7 @@ class App extends React.Component {
           exact={route.exact}
           name={route.name}
           component={route.component}
-          game={_state.game}
+          gameStore={store}
         />
       ) : null;
     });

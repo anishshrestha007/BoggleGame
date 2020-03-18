@@ -15,13 +15,11 @@ export const publicRoutes = [
 export const privateRoutes = [
   {
     path: "/BoggleGame",
-    exact: true,
     name: "BoggleGame",
     component: BoggleGame
   },
   {
     path: "/GameReview",
-    exact: true,
     name: "GameReview",
     component: GameReview
   }
