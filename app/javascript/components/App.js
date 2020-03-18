@@ -6,14 +6,26 @@ import configureStore from "../store/configureStore";
 import GameLogo from "../../assets/images/GameLogo.png";
 import { Image } from "semantic-ui-react";
 import "./css/App.css";
-import { publicRoutes, privateRoutes } from "./routes";
+import { publicRoutes, privateRoutes, invalidRoutes } from "./routes";
 import PrivateRoute from "./generics/PrivateRoute";
+import { SemanticToastContainer } from "react-semantic-toasts";
 const store = configureStore();
 class App extends React.Component {
   render() {
     const _state = store.getState();
 
     const _publicRoutes = publicRoutes.map((route, index) => {
+      return route.component ? (
+        <Route
+          key={index}
+          path={route.path}
+          exact={route.exact}
+          name={route.name}
+          render={props => <route.component {...props} />}
+        />
+      ) : null;
+    });
+    const _invalidRoutes = invalidRoutes.map((route, index) => {
       return route.component ? (
         <Route
           key={index}
@@ -40,15 +52,15 @@ class App extends React.Component {
     return (
       <Provider store={store}>
         <BrowserRouter>
-          <Suspense>
+          <div className="app">
+            <Image src={GameLogo} centered />
+            <SemanticToastContainer position="top-right" />
             <Switch>
-              <div className="app">
-                <Image src={GameLogo} centered />
-                {_publicRoutes}
-                {_privateRoutes}
-              </div>
+              {_publicRoutes}
+              {_privateRoutes}
+              {_invalidRoutes}
             </Switch>
-          </Suspense>
+          </div>
         </BrowserRouter>
       </Provider>
     );

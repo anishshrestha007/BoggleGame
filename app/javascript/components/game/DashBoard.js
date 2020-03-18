@@ -13,6 +13,7 @@ import "../css/DashBoard.css";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import { startGame } from "../../store/actions/gameAction";
+import { toast } from "react-semantic-toasts";
 
 const gameOptions = [
   { key: "4", value: 4, text: "4 * 4" },
@@ -24,7 +25,8 @@ class DashBoard extends React.Component {
     super(props);
     this.state = {
       userName: "",
-      size: 4
+      size: 4,
+      error: false
     };
   }
   handleChange = (e, data) => {
@@ -34,21 +36,42 @@ class DashBoard extends React.Component {
     this.setState({ size: data.value });
   };
   handleStartGame = (event, data) => {
-    const { userName, size } = this.state;
+    const { userName, size, error } = this.state;
+
     var history = this.props.history;
-    var me = this;
+
     if (userName) {
       var gameInfo = {
         userName,
         size
       };
-    }
-    this.props.startGame &&
-      this.props.startGame(gameInfo, () => {
-        history.push("/BoggleGame");
+
+      this.props.startGame &&
+        this.props.startGame(gameInfo, () => {
+          history.push("/BoggleGame");
+          toast({
+            type: "success",
+            icon: "gamepad",
+            title: "Boogle",
+            description: "Welcome " + userName + ", Start playing boggle game!",
+            animation: "bounce",
+            time: 5000
+          });
+        });
+    } else {
+      toast({
+        type: "warning",
+        icon: "gamepad",
+        title: "Boggle",
+        description: "Please enter username before playing game!",
+        animation: "shake",
+        time: 5000
       });
+    }
+    this.setState({ error: userName !== "" ? false : true });
   };
   render() {
+    const { error } = this.state;
     return (
       <div className="dashboard-main">
         <Card centered color="orange" raised={true}>
@@ -66,6 +89,7 @@ class DashBoard extends React.Component {
           <Card.Content extra>
             <Input
               icon="user"
+              error={error}
               iconPosition="left"
               placeholder="Enter you name here"
               onChange={this.handleChange}
