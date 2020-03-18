@@ -28,21 +28,54 @@ class BoggleGame extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedCells: []
+      selectedCells: [],
+      selectedLetters: "",
+      prevCell: null
     };
   }
-  handleCellClick = (selectedLetter, selected) => {
-    if (!selected)
-      this.setState(prevState => ({
-        selectedCells: [...prevState.selectedCells, selectedLetter]
-      }));
-    else {
-      let filteredLetters = this.state.selectedCells.filter(
-        sc => sc !== selectedLetter
+  handleCellClick = (selectedLetter, selected, rowId, colId) => {
+    console.log(rowId + " * " + colId);
+    const { selectedCells, selectedLetters, prevCell } = this.state;
+    const currentCell = {
+      rowId,
+      colId
+    };
+    debugger;
+    if (!selected && this.isCellAdjacent(prevCell, currentCell))
+      this.setState(
+        prevState => ({
+          selectedCells: [...prevState.selectedCells, selectedLetter],
+          selectedLetters: prevState.selectedLetters.concat(selectedLetter),
+          prevCell: currentCell
+        }),
+        () => {
+          console.log(selectedLetters);
+        }
       );
-      this.setState({ selectedCells: filteredLetters });
+    else {
+      if (selectedCells[selectedCells.length - 1] === selectedLetter) {
+        this.setState(
+          prevState => ({
+            selectedCells: prevState.selectedCells.slice(0, -1),
+            selectedLetters: prevState.selectedLetters.slice(0, -1)
+          }),
+          () => {
+            console.log(selectedLetters);
+          }
+        );
+      }
     }
   };
+  isCellAdjacent(prevCell, currentCell) {
+    if (!prevCell) return true;
+    const colDiff = Math.abs(prevCell.colId - currentCell.colId);
+    const rowDiff = Math.abs(prevCell.rowId - currentCell.rowId);
+    if (colDiff <= 1 && rowDiff <= 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   render() {
     const { gameInfo } = this.props;
@@ -57,9 +90,9 @@ class BoggleGame extends React.Component {
               Welcome {gameInfo.userName}
             </Card.Header>
             <Grid columns={4} celled={true} textAlign="center">
-              {chunckedLetters.map(letters => (
-                <Grid.Row color="teal">
-                  {letters.map(letter => (
+              {chunckedLetters.map((letters, index) => (
+                <Grid.Row color="teal" key={index}>
+                  {letters.map((letter, i) => (
                     <Grid.Column
                       className={
                         selectedCells.includes(letter) ? "selectedCell" : ""
@@ -69,7 +102,9 @@ class BoggleGame extends React.Component {
                       onClick={() =>
                         this.handleCellClick(
                           letter,
-                          selectedCells.includes(letter)
+                          selectedCells.includes(letter),
+                          index,
+                          i
                         )
                       }
                     >
