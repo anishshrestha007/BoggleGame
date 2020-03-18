@@ -98,7 +98,7 @@ class DashBoard extends React.Component {
             <Divider />
             <div className="rowC">
               <Dropdown
-                placeholder="Select Board Size"
+                placeholder="4 * 4"
                 fluid
                 selection
                 options={gameOptions}
