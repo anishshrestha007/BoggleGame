@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import { startGame } from "../../store/actions/gameAction";
+import "../css/BoggleGame.css";
 import { Grid, Card, Button, Label } from "semantic-ui-react";
 const letters = [
   "a",
@@ -24,8 +25,28 @@ const letters = [
   "p"
 ];
 class BoggleGame extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedCells: []
+    };
+  }
+  handleCellClick = (selectedLetter, selected) => {
+    if (!selected)
+      this.setState(prevState => ({
+        selectedCells: [...prevState.selectedCells, selectedLetter]
+      }));
+    else {
+      let filteredLetters = this.state.selectedCells.filter(
+        sc => sc !== selectedLetter
+      );
+      this.setState({ selectedCells: filteredLetters });
+    }
+  };
+
   render() {
     const { gameInfo } = this.props;
+    const { selectedCells } = this.state;
     const chunckedLetters = _.chunk(letters, 4);
     return (
       <React.Fragment>
@@ -40,9 +61,17 @@ class BoggleGame extends React.Component {
                 <Grid.Row color="teal">
                   {letters.map(letter => (
                     <Grid.Column
+                      className={
+                        selectedCells.includes(letter) ? "selectedCell" : ""
+                      }
                       key={letter}
                       floated="right"
-                      onClick={() => console.log({ letter })}
+                      onClick={() =>
+                        this.handleCellClick(
+                          letter,
+                          selectedCells.includes(letter)
+                        )
+                      }
                     >
                       {_.capitalize(letter)}
                     </Grid.Column>
