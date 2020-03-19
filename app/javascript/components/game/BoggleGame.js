@@ -68,7 +68,10 @@ class BoggleGame extends React.Component {
           prevState => ({
             selectedCells: prevState.selectedCells.slice(0, -1),
             selectedLetters: prevState.selectedLetters.slice(0, -1),
-            prevCell: selectedCells[selectedCells.length - 2].cellPosition
+            prevCell:
+              selectedCells.length <= 1
+                ? null
+                : selectedCells[selectedCells.length - 2].cellPosition
           }),
           () => {
             console.log(selectedLetters);
@@ -88,7 +91,29 @@ class BoggleGame extends React.Component {
       return false;
     }
   }
-
+  handleShuffleDeck = () => {
+    this.setState(prevState => ({
+      letters: _.shuffle(prevState.letters),
+      selectedCells: [],
+      selectedLetters: "",
+      prevCell: null
+    }));
+  };
+  handleUndoDeck = () => {
+    this.setState(
+      prevState => ({
+        selectedCells: prevState.selectedCells.slice(0, -1),
+        selectedLetters: prevState.selectedLetters.slice(0, -1),
+        prevCell:
+          selectedCells.length <= 1
+            ? null
+            : selectedCells[selectedCells.length - 2].cellPosition
+      }),
+      () => {
+        console.log(selectedLetters);
+      }
+    );
+  };
   render() {
     const { gameInfo } = this.props;
     const { selectedCells, selectedLetters, letters } = this.state;
@@ -102,6 +127,8 @@ class BoggleGame extends React.Component {
           <Card.Content>
             <Card.Header textAlign="center" color="orange">
               Welcome {gameInfo.userName}
+              <Button onClick={this.handleShuffleDeck} basic icon="recycle" />
+              <Button onClick={this.handleUndoDeck} basic icon="undo" />
             </Card.Header>
             <Grid columns={4} celled={true} textAlign="center">
               {chunckedLetters.map((letters, index) => (
