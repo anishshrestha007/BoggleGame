@@ -6,7 +6,7 @@ import { createStructuredSelector } from "reselect";
 import { startGame } from "../../store/actions/gameAction";
 import "../css/BoggleGame.css";
 import { Grid, Card, Button, Label } from "semantic-ui-react";
-const letters = [
+const letterArr = [
   "a",
   "b",
   "c",
@@ -30,7 +30,8 @@ class BoggleGame extends React.Component {
     this.state = {
       selectedCells: [],
       selectedLetters: "",
-      prevCell: null
+      prevCell: null,
+      letters: _.shuffle(letterArr)
     };
   }
   handleCellClick = (selectedLetter, selected, rowId, colId) => {
@@ -44,7 +45,16 @@ class BoggleGame extends React.Component {
     if (!selected && this.isCellAdjacent(prevCell, currentCell))
       this.setState(
         prevState => ({
-          selectedCells: [...prevState.selectedCells, selectedLetter],
+          selectedCells: [
+            ...prevState.selectedCells,
+            {
+              selectedLetter,
+              cellPosition: {
+                rowId,
+                colId
+              }
+            }
+          ],
           selectedLetters: prevState.selectedLetters.concat(selectedLetter),
           prevCell: currentCell
         }),
@@ -53,11 +63,12 @@ class BoggleGame extends React.Component {
         }
       );
     else {
-      if (selectedCells[selectedCells.length - 1] === selectedLetter) {
+      if (selectedLetters[selectedLetters.length - 1] === selectedLetter) {
         this.setState(
           prevState => ({
             selectedCells: prevState.selectedCells.slice(0, -1),
-            selectedLetters: prevState.selectedLetters.slice(0, -1)
+            selectedLetters: prevState.selectedLetters.slice(0, -1),
+            prevCell: selectedCells[selectedCells.length - 2].cellPosition
           }),
           () => {
             console.log(selectedLetters);
@@ -68,6 +79,7 @@ class BoggleGame extends React.Component {
   };
   isCellAdjacent(prevCell, currentCell) {
     if (!prevCell) return true;
+
     const colDiff = Math.abs(prevCell.colId - currentCell.colId);
     const rowDiff = Math.abs(prevCell.rowId - currentCell.rowId);
     if (colDiff <= 1 && rowDiff <= 1) {
@@ -79,8 +91,10 @@ class BoggleGame extends React.Component {
 
   render() {
     const { gameInfo } = this.props;
-    const { selectedCells } = this.state;
+    const { selectedCells, selectedLetters, letters } = this.state;
+
     const chunckedLetters = _.chunk(letters, 4);
+    debugger;
     return (
       <React.Fragment>
         {" "}
@@ -95,14 +109,14 @@ class BoggleGame extends React.Component {
                   {letters.map((letter, i) => (
                     <Grid.Column
                       className={
-                        selectedCells.includes(letter) ? "selectedCell" : ""
+                        selectedLetters.includes(letter) ? "selectedCell" : ""
                       }
                       key={letter}
                       floated="right"
                       onClick={() =>
                         this.handleCellClick(
                           letter,
-                          selectedCells.includes(letter),
+                          selectedLetters.includes(letter),
                           index,
                           i
                         )
