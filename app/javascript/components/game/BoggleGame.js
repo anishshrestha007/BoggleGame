@@ -6,6 +6,7 @@ import { createStructuredSelector } from "reselect";
 import { startGame } from "../../store/actions/gameAction";
 import "../css/BoggleGame.css";
 import { Grid, Card, Button, Label } from "semantic-ui-react";
+import Timer from "../generics/Timer";
 const letterArr = [
   "a",
   "b",
@@ -31,7 +32,8 @@ class BoggleGame extends React.Component {
       selectedCells: [],
       selectedLetters: "",
       prevCell: null,
-      letters: _.shuffle(letterArr)
+      letters: _.shuffle(letterArr),
+      isGameComplete: false
     };
   }
   handleCellClick = (selectedLetter, selected, rowId, colId) => {
@@ -41,7 +43,7 @@ class BoggleGame extends React.Component {
       rowId,
       colId
     };
-    debugger;
+
     if (!selected && this.isCellAdjacent(prevCell, currentCell))
       this.setState(
         prevState => ({
@@ -115,18 +117,42 @@ class BoggleGame extends React.Component {
       }
     );
   };
+  gameEnded = () => {
+    this.setState({ isGameComplete: true }, () => {
+      console.log("Game Ended !!");
+    });
+  };
   render() {
     const { gameInfo } = this.props;
-    const { selectedCells, selectedLetters, letters } = this.state;
+    const {
+      selectedCells,
+      selectedLetters,
+      letters,
+      isGameComplete
+    } = this.state;
 
     const chunckedLetters = _.chunk(letters, 4);
-    debugger;
+
     return (
       <React.Fragment>
         {" "}
         <Card centered color="orange" raised={true}>
           <Card.Content>
             <Card.Header textAlign="center" color="orange">
+           <p>   {isGameComplete ? (
+                "Game Completed"
+              ) : (
+                <Button
+                  content="TIme"
+                  icon="time"
+                  label={{
+                    as: "a",
+                    basic: true,
+                    content: <Timer timeValue={1} timerEnded={this.gameEnded} />
+                  }}
+                  labelPosition="right"
+                />
+              )}</p>
               Welcome {gameInfo.userName}
               <Button onClick={this.handleShuffleDeck} basic icon="recycle" />
               <Button onClick={this.handleUndoDeck} basic icon="undo" />
