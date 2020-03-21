@@ -100,6 +100,7 @@ class BoggleGame extends React.Component {
     }));
   };
   handleUndoDeck = () => {
+    const { selectedCells, selectedLetters } = this.state;
     this.setState(
       prevState => ({
         selectedCells: prevState.selectedCells.slice(0, -1),
