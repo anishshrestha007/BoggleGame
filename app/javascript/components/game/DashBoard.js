@@ -14,6 +14,7 @@ import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import { startGame } from "../../store/actions/gameAction";
 import { toast } from "react-semantic-toasts";
+import { showToast } from "../generics/Toast";
 
 const gameOptions = [
   { key: "4", value: 4, text: "4 * 4" },
@@ -49,24 +50,9 @@ class DashBoard extends React.Component {
       this.props.startGame &&
         this.props.startGame(gameInfo, () => {
           history.push("/BoggleGame");
-          toast({
-            type: "success",
-            icon: "gamepad",
-            title: "Boogle",
-            description: "Welcome " + userName + ", Start playing boggle game!",
-            animation: "bounce",
-            time: 5000
-          });
         });
     } else {
-      toast({
-        type: "warning",
-        icon: "gamepad",
-        title: "Boggle",
-        description: "Please enter username before playing game!",
-        animation: "shake",
-        time: 5000
-      });
+      showToast("warning", "Please enter username before playing game!")
     }
     this.setState({ error: userName !== "" ? false : true });
   };

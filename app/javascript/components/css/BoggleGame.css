@@ -1,3 +1,7 @@
 .selectedCell {
   background-color: chocolate;
 }
+.rowC {
+  display: flex;
+  flex-direction: row;
+}

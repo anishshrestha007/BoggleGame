@@ -1,8 +1,112 @@
-import { START_GAME } from "../types";
+import { START_GAME, GET_GAME_DATA, CHECK_WORD, COMPLETE_GAME } from "../types";
+import { showToast } from "../../components/generics/Toast";
+import { boggleService } from "../../services/boggleService";
 
 export const startGame = (gameInfo, callBack) => {
-  callBack && callBack();
   return dispatch => {
-    dispatch({ type: START_GAME, gameInfo });
+    boggleService.startGame().then(
+      response => {
+        if (response) {
+          if (response.success) {
+            dispatch({
+              type: START_GAME,
+              game: {
+                userName: gameInfo.userName,
+                size: gameInfo.size,
+                version: response.data.version,
+                gameTime: response.data.gameTime
+              }
+            });
+            showToast(
+              "success",
+              "Welcome " + gameInfo.userName + ", Start playing boggle game!"
+            );
+            callBack && callBack();
+          } else {
+            showToast("warning", response.message);
+          }
+        } else {
+          showToast("error", "Server Error !");
+        }
+      },
+      error => {
+        showToast("error", "Server Error !");
+      }
+    );
+  };
+};
+export const getGameData = (gameInfo, callBack) => {
+  return dispatch => {
+    boggleService.getGameData(gameInfo).then(
+      response => {
+        if (response) {
+          if (response.success) {
+            dispatch({
+              type: GET_GAME_DATA,
+              game: {
+                gameData: response.data.game_data
+              }
+            });
+            callBack && callBack(response.data);
+          } else {
+            showToast("warning", response.message);
+          }
+        } else {
+          showToast("error", "Server Error !");
+        }
+      },
+      error => {
+        showToast("error", "Server Error !");
+      }
+    );
+  };
+};
+
+export const completeGame = (ended, callBack) => {
+  return dispatch => {
+    dispatch({
+      type: COMPLETE_GAME,
+      game: {
+        isComplete: ended
+      }
+    });
+    callBack && ended && callBack();
+  };
+};
+
+export const checkWord = (version, word, callBack) => {
+  return dispatch => {
+    boggleService.checkWord(version, word).then(
+      response => {
+        if (response) {
+          if (response.success) {
+            dispatch({
+              type: CHECK_WORD,
+              game: {
+                word: word,
+                isCorrect: response.data.is_correct,
+                score: response.data.score
+              }
+            });
+            if (response.data.score > 0) {
+              showToast(
+                "success",
+                "Congratulations!!! You have scored " + response.data.score
+              );
+              callBack && callBack(response.data);
+            } else {
+              showToast("error", "No words found!!");
+            }
+          } else {
+            showToast("warning", response.message);
+          }
+        } else {
+          showToast("error", "Server Error !");
+        }
+      },
+      error => {
+        showToast("error", "Server Error !");
+      }
+    );
   };
 };

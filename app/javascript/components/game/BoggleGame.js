@@ -3,28 +3,17 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
-import { startGame } from "../../store/actions/gameAction";
+import {
+  getGameData,
+  checkWord,
+  completeGame
+} from "../../store/actions/gameAction";
 import "../css/BoggleGame.css";
-import { Grid, Card, Button, Label } from "semantic-ui-react";
-import Timer from "../generics/Timer";
-const letterArr = [
-  "a",
-  "b",
-  "c",
-  "d",
-  "e",
-  "f",
-  "g",
-  "h",
-  "i",
-  "j",
-  "k",
-  "l",
-  "m",
-  "n",
-  "o",
-  "p"
-];
+import { Grid, Card, Button, Label, Image } from "semantic-ui-react";
+import ProfilePic from "../../../assets/images/ProfilePic.jpg";
+import ScoreBoard from "./ScoreBoard";
+import { showToast } from "../generics/Toast";
+
 class BoggleGame extends React.Component {
   constructor(props) {
     super(props);
@@ -32,13 +21,20 @@ class BoggleGame extends React.Component {
       selectedCells: [],
       selectedLetters: "",
       prevCell: null,
-      letters: _.shuffle(letterArr),
-      isGameComplete: false
+
+      boggleData: null,
+      word: ""
     };
+  }
+  componentDidMount() {
+    this.props.getGameData &&
+      this.props.getGameData(this.props.gameInfo, resp => {
+        this.setState({ boggleData: resp.game_data.split("") });
+      });
   }
   handleCellClick = (selectedLetter, selected, rowId, colId) => {
     console.log(rowId + " * " + colId);
-    const { selectedCells, selectedLetters, prevCell } = this.state;
+    const { selectedCells, selectedLetters, prevCell, word } = this.state;
     const currentCell = {
       rowId,
       colId
@@ -50,14 +46,17 @@ class BoggleGame extends React.Component {
           selectedCells: [
             ...prevState.selectedCells,
             {
-              selectedLetter,
+              selectedLetter: selectedLetter + rowId + colId,
               cellPosition: {
                 rowId,
                 colId
               }
             }
           ],
-          selectedLetters: prevState.selectedLetters.concat(selectedLetter),
+          selectedLetters: prevState.selectedLetters.concat(
+            selectedLetter + rowId + colId
+          ),
+          word: prevState.word.concat(selectedLetter),
           prevCell: currentCell
         }),
         () => {
@@ -65,11 +64,18 @@ class BoggleGame extends React.Component {
         }
       );
     else {
-      if (selectedLetters[selectedLetters.length - 1] === selectedLetter) {
+      if (
+        selectedLetters.substr(selectedLetters.length - 3) ===
+        selectedLetter + rowId + colId
+      ) {
         this.setState(
           prevState => ({
             selectedCells: prevState.selectedCells.slice(0, -1),
-            selectedLetters: prevState.selectedLetters.slice(0, -1),
+            selectedLetters: prevState.selectedLetters.replace(
+              selectedLetter + rowId + colId,
+              ""
+            ),
+            word: prevState.word.slice(0, -1),
             prevCell:
               selectedCells.length <= 1
                 ? null
@@ -84,7 +90,6 @@ class BoggleGame extends React.Component {
   };
   isCellAdjacent(prevCell, currentCell) {
     if (!prevCell) return true;
-
     const colDiff = Math.abs(prevCell.colId - currentCell.colId);
     const rowDiff = Math.abs(prevCell.rowId - currentCell.rowId);
     if (colDiff <= 1 && rowDiff <= 1) {
@@ -95,106 +100,167 @@ class BoggleGame extends React.Component {
   }
   handleShuffleDeck = () => {
     this.setState(prevState => ({
-      letters: _.shuffle(prevState.letters),
+      boggleData: _.shuffle(prevState.boggleData),
       selectedCells: [],
       selectedLetters: "",
-      prevCell: null
+      prevCell: null,
+      word: ""
     }));
   };
   handleUndoDeck = () => {
-    const { selectedCells, selectedLetters } = this.state;
-    this.setState(
-      prevState => ({
-        selectedCells: prevState.selectedCells.slice(0, -1),
-        selectedLetters: prevState.selectedLetters.slice(0, -1),
-        prevCell:
-          selectedCells.length <= 1
-            ? null
-            : selectedCells[selectedCells.length - 2].cellPosition
-      }),
-      () => {
-        console.log(selectedLetters);
-      }
-    );
+    const { selectedCells, selectedLetters, prevCell, word } = this.state;
+    debugger;
+    if (prevCell)
+      this.setState(
+        prevState => ({
+          selectedCells: prevState.selectedCells.slice(0, -1),
+          selectedLetters: prevState.selectedLetters.replace(
+            word[word.length - 1] + prevCell.rowId + prevCell.colId,
+            ""
+          ),
+          prevCell:
+            selectedCells.length <= 1
+              ? null
+              : selectedCells[selectedCells.length - 2].cellPosition,
+          word: prevState.word.slice(0, -1)
+        }),
+        () => {
+          console.log(selectedLetters);
+        }
+      );
   };
   gameEnded = () => {
-    this.setState({ isGameComplete: true }, () => {
-      console.log("Game Ended !!");
-    });
+    this.completeGame(true);
+  };
+  handleRestartGame = () => {
+    this.completeGame(false);
+  };
+  completeGame(param) {
+    this.props.completeGame &&
+      this.props.completeGame(param, () => {
+        var history = this.props.history;
+        history.push("/GameReview");
+      });
+  }
+  handleSubmitGame = () => {
+    const { gameInfo } = this.props;
+    const { word } = this.state;
+    if (word && gameInfo) {
+      const wordExists =
+        gameInfo.words.filter(wrds => wrds.word === word).length > 0;
+      if (wordExists) {
+        showToast(
+          "warning",
+          "Sorry " + gameInfo.userName + ", You have already thought about it!"
+        );
+        return;
+      }
+    }
+
+    this.props.checkWord &&
+      this.props.checkWord(this.props.gameInfo.version, word, () => {
+        this.setState(prevState => ({
+          selectedCells: [],
+          selectedLetters: "",
+          prevCell: null,
+          word: ""
+        }));
+      });
+  };
+  handleResetClick = () => {
+    this.setState(prevState => ({
+      selectedCells: [],
+      selectedLetters: "",
+      prevCell: null,
+      word: ""
+    }));
   };
   render() {
     const { gameInfo } = this.props;
-    const {
-      selectedCells,
-      selectedLetters,
-      letters,
-      isGameComplete
-    } = this.state;
+    const { selectedCells, selectedLetters, boggleData, word } = this.state;
 
-    const chunckedLetters = _.chunk(letters, 4);
+    const chunckedLetters = boggleData && _.chunk(boggleData, gameInfo.size);
 
     return (
       <React.Fragment>
-        {" "}
-        <Card centered color="orange" raised={true}>
-          <Card.Content>
-            <Card.Header textAlign="center" color="orange">
-           <p>   {isGameComplete ? (
-                "Game Completed"
-              ) : (
-                <Button
-                  content="TIme"
-                  icon="time"
-                  label={{
-                    as: "a",
-                    basic: true,
-                    content: <Timer timeValue={1} timerEnded={this.gameEnded} />
-                  }}
-                  labelPosition="right"
-                />
-              )}</p>
-              Welcome {gameInfo.userName}
-              <Button onClick={this.handleShuffleDeck} basic icon="recycle" />
-              <Button onClick={this.handleUndoDeck} basic icon="undo" />
-            </Card.Header>
-            <Grid columns={4} celled={true} textAlign="center">
-              {chunckedLetters.map((letters, index) => (
-                <Grid.Row color="teal" key={index}>
-                  {letters.map((letter, i) => (
-                    <Grid.Column
-                      className={
-                        selectedLetters.includes(letter) ? "selectedCell" : ""
-                      }
-                      key={letter}
-                      floated="right"
-                      onClick={() =>
-                        this.handleCellClick(
-                          letter,
-                          selectedLetters.includes(letter),
-                          index,
-                          i
-                        )
-                      }
-                    >
-                      {_.capitalize(letter)}
-                    </Grid.Column>
+        {boggleData && (
+          <div class="rowC">
+            <Card centered color="orange" raised={true}>
+              <Card.Content>
+                <Card.Header textAlign="center" color="orange">
+                  <Image floated="left" size="mini" src={ProfilePic} />{" "}
+                  {gameInfo.userName}
+                  <Button
+                    onClick={this.handleShuffleDeck}
+                    basic
+                    icon="recycle"
+                  />
+                  <Button onClick={this.handleUndoDeck} basic icon="undo" />
+                  <Button onClick={this.handleResetClick} basic>
+                    {" "}
+                    Reset{" "}
+                  </Button>
+                </Card.Header>
+                <Grid columns={gameInfo.size} celled={true} textAlign="center">
+                  {chunckedLetters.map((letters, index) => (
+                    <Grid.Row color="teal" key={index}>
+                      {letters.map((letter, i) => (
+                        <Grid.Column
+                          className={
+                            selectedLetters.includes(letter + index + i)
+                              ? "selectedCell"
+                              : ""
+                          }
+                          key={i}
+                          floated="right"
+                          onClick={() =>
+                            this.handleCellClick(
+                              letter,
+                              selectedLetters.includes(letter + index + i),
+                              index,
+                              i
+                            )
+                          }
+                        >
+                          {_.capitalize(letter)}
+                        </Grid.Column>
+                      ))}
+                    </Grid.Row>
                   ))}
-                </Grid.Row>
-              ))}
-            </Grid>
-          </Card.Content>
-          <Card.Content extra>
-            <div className="center-wrapper">
-              <Button
-                onClick={this.handleStartGame}
-                basic
-                color="green"
-                icon="play"
-                content="Submit"
-              />
-            </div>
-          </Card.Content>
-        </Card>
+                </Grid>
+              </Card.Content>
+              <Card.Content extra>
+                <div className="center-wrapper">
+                  {!gameInfo.isComplete ? (
+                    <React.Fragment>
+                      {" "}
+                      <p>Word : {word}</p>{" "}
+                      <Button
+                        onClick={this.handleSubmitGame}
+                        basic
+                        color="green"
+                        icon="play"
+                        content="Submit"
+                      />{" "}
+                    </React.Fragment>
+                  ) : (
+                    <Button
+                      onClick={this.handleRestartGame}
+                      basic
+                      color="green"
+                      icon="play"
+                      content="Restart Game"
+                    />
+                  )}
+                </div>
+              </Card.Content>
+            </Card>
+            <ScoreBoard
+              isGameComplete={gameInfo.isComplete}
+              gameEnded={this.gameEnded}
+            />
+          </div>
+        )}
       </React.Fragment>
     );
   }
@@ -206,5 +272,5 @@ BoggleGame.propTypes = {
 const structuredSelector = createStructuredSelector({
   gameInfo: state => state.game.gameInfo
 });
-const mapDispatchToProps = { startGame };
+const mapDispatchToProps = { getGameData, checkWord, completeGame };
 export default connect(structuredSelector, mapDispatchToProps)(BoggleGame);
