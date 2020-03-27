@@ -15,7 +15,7 @@ class GameReview extends React.Component {
     return (
       <React.Fragment>
         <div className="row-center review">
-          <ScoreBoard isGameComplete={true} />
+          <ScoreBoard showResult={true} />
           <Button
           onClick={this.handleRestartGame}
           color="green"

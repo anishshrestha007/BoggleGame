@@ -180,9 +180,7 @@ class BoggleGame extends React.Component {
               <Card.Content>
                 <Card.Header textAlign="center" color="orange">
                   <div className="card-header-custom">
-                    {gameInfo.isGameComplete ? (
-                      "Game Completed"
-                    ) : (
+                    {!gameInfo.isComplete && (
                       <Button
                         icon="time"
                         label={{
@@ -243,7 +241,7 @@ class BoggleGame extends React.Component {
                   {!gameInfo.isComplete ? (
                     <React.Fragment>
                       {" "}
-                      <p>Word : {word}</p>{" "}
+                      <p>Word : {_.capitalize(word)} </p>
                       <Button
                         onClick={this.handleSubmitGame}
                         basic
@@ -264,10 +262,7 @@ class BoggleGame extends React.Component {
                 </div>
               </Card.Content>
             </Card>
-            <ScoreBoard
-              isGameComplete={gameInfo.isComplete}
-              gameEnded={this.gameEnded}
-            />
+            <ScoreBoard showResult={false} gameEnded={this.gameEnded} />
           </div>
         )}
       </React.Fragment>

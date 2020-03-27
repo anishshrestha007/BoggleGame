@@ -8,7 +8,7 @@ import "../css/ScoreBoard.css";
 
 class ScoreBoard extends React.Component {
   render() {
-    const { gameInfo, isGameComplete } = this.props;
+    const { gameInfo, showResult } = this.props;
     return (
       <Card color="orange" raised={true}>
         <Card.Content>
@@ -49,7 +49,7 @@ class ScoreBoard extends React.Component {
                     <b> {gameInfo.totalscore} pts </b>{" "}
                   </Table.HeaderCell>
                 </Table.Row>
-                {gameInfo.totalAttepts > 0 && gameInfo.isComplete && (
+                {gameInfo.totalAttepts > 0 && gameInfo.isComplete && showResult && (
                   <React.Fragment>
                     <Table.Row>
                       <Table.HeaderCell>
