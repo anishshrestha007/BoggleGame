@@ -13,6 +13,7 @@ import { Grid, Card, Button, Label, Image } from "semantic-ui-react";
 import ProfilePic from "../../../assets/images/ProfilePic.jpg";
 import ScoreBoard from "./ScoreBoard";
 import { showToast } from "../generics/Toast";
+import { isSubmitValid } from "../../utils/gameUtil";
 
 class BoggleGame extends React.Component {
   constructor(props) {
@@ -21,7 +22,6 @@ class BoggleGame extends React.Component {
       selectedCells: [],
       selectedLetters: "",
       prevCell: null,
-
       boggleData: null,
       word: ""
     };
@@ -145,27 +145,17 @@ class BoggleGame extends React.Component {
   handleSubmitGame = () => {
     const { gameInfo } = this.props;
     const { word } = this.state;
-    if (word && gameInfo) {
-      const wordExists =
-        gameInfo.words.filter(wrds => wrds.word === word).length > 0;
-      if (wordExists) {
-        showToast(
-          "warning",
-          "Sorry " + gameInfo.userName + ", You have already thought about it!"
-        );
-        return;
-      }
+    if (isSubmitValid(word, gameInfo)) {
+      this.props.checkWord &&
+        this.props.checkWord(this.props.gameInfo.version, word, () => {
+          this.setState(prevState => ({
+            selectedCells: [],
+            selectedLetters: "",
+            prevCell: null,
+            word: ""
+          }));
+        });
     }
-
-    this.props.checkWord &&
-      this.props.checkWord(this.props.gameInfo.version, word, () => {
-        this.setState(prevState => ({
-          selectedCells: [],
-          selectedLetters: "",
-          prevCell: null,
-          word: ""
-        }));
-      });
   };
   handleResetClick = () => {
     this.setState(prevState => ({
@@ -240,7 +230,7 @@ class BoggleGame extends React.Component {
                         basic
                         color="green"
                         icon="play"
-                        content="Submit"
+                        content="Check"
                       />{" "}
                     </React.Fragment>
                   ) : (

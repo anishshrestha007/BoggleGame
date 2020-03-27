@@ -9,6 +9,8 @@ class HomeController < ApplicationController
     data = {
       :version => BOGGLE_VERSION,
       :gameTime => GAME_TIME,
+      :maxWord => MAX_WORD_LENGTH,
+      :minWord => MIN_WORD_LENGTH,
     }
     response_data = ResponseModel.new(message, success, data)
 

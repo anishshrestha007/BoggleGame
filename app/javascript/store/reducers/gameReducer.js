@@ -4,6 +4,8 @@ export const initialState = {
   gameInfo: {
     userName: "",
     size: 4,
+    maxWord: 10,
+    minWord: 3,
     data: null,
     version: "v1",
     gameTime: 3,
@@ -27,7 +29,9 @@ export function gameReducer(state = initialState, action) {
           userName: action.game.userName,
           size: action.game.size,
           version: action.game.version,
-          gameTime: action.game.gameTime
+          gameTime: action.game.gameTime,
+          maxWord: action.game.maxWord,
+          minWord: action.game.minWord
         }
       };
     case GET_GAME_DATA:
@@ -39,13 +43,30 @@ export function gameReducer(state = initialState, action) {
         }
       };
     case COMPLETE_GAME:
-      return {
-        ...state,
-        gameInfo: {
-          ...state.gameInfo,
-          isComplete: action.game.isComplete
-        }
-      };
+      if (action.game.isComplete) {
+        return {
+          ...state,
+          gameInfo: {
+            ...state.gameInfo,
+            isComplete: action.game.isComplete
+          }
+        };
+      } else {
+        return {
+          ...state,
+          gameInfo: {
+            ...state.gameInfo,
+            words: [],
+            isCorrect: false,
+            totalscore: 0,
+            isComplete: action.game.isComplete,
+            totalAttepts: 0,
+            correctAttempts: 0,
+            inCorrectAttempts: 0
+          }
+        };
+      }
+
     case CHECK_WORD:
       return {
         ...state,
@@ -62,9 +83,11 @@ export function gameReducer(state = initialState, action) {
             parseInt(state.gameInfo.totalscore) +
             (isNaN(action.game.score) ? 0 : parseInt(action.game.score)),
           isCorrect: action.game.isCorrect,
-          totalAttepts : state.gameInfo.totalAttepts + 1,
-          correctAttempts : state.gameInfo.correctAttempts + (action.game.isCorrect  ? 1 : 0),
-          inCorrectAttempts : state.gameInfo.inCorrectAttempts + (action.game.isCorrect  ? 0 : 1)
+          totalAttepts: state.gameInfo.totalAttepts + 1,
+          correctAttempts:
+            state.gameInfo.correctAttempts + (action.game.isCorrect ? 1 : 0),
+          inCorrectAttempts:
+            state.gameInfo.inCorrectAttempts + (action.game.isCorrect ? 0 : 1)
         }
       };
 

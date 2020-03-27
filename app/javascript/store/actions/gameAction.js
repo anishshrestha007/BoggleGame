@@ -1,6 +1,7 @@
 import { START_GAME, GET_GAME_DATA, CHECK_WORD, COMPLETE_GAME } from "../types";
 import { showToast } from "../../components/generics/Toast";
 import { boggleService } from "../../services/boggleService";
+import _ from "lodash";
 
 export const startGame = (gameInfo, callBack) => {
   return dispatch => {
@@ -14,7 +15,9 @@ export const startGame = (gameInfo, callBack) => {
                 userName: gameInfo.userName,
                 size: gameInfo.size,
                 version: response.data.version,
-                gameTime: response.data.gameTime
+                gameTime: response.data.gameTime,
+                maxWord: response.data.maxWord,
+                minWord: response.data.minWord
               }
             });
             showToast(
@@ -91,11 +94,11 @@ export const checkWord = (version, word, callBack) => {
             if (response.data.score > 0) {
               showToast(
                 "success",
-                "Congratulations!!! You have scored " + response.data.score
+                "Congratulations! You have scored " + response.data.score + " points."
               );
               callBack && callBack(response.data);
             } else {
-              showToast("error", "No words found!!");
+              showToast("error","Try again! "+    _.capitalize(word)  + " no such word found in the dictionary." );
             }
           } else {
             showToast("warning", response.message);
