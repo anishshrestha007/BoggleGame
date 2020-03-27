@@ -4,24 +4,26 @@ import { Image, Button } from "semantic-ui-react";
 import ProfilePic from "../../../assets/images/ProfilePic.jpg";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
+import "../css/BoggleGame.css";
 class GameReview extends React.Component {
-  handleRestartGame=()=>{
+  handleRestartGame = () => {
     var history = this.props.history;
     history.push("/BoggleGame");
-  }
+  };
   render() {
     const { gameInfo } = this.props;
     return (
       <React.Fragment>
-        <Image floated="left" size="mini" src={ProfilePic} />{" "}
-        {gameInfo.userName}
-        <ScoreBoard isGameComplete={true} />
-        <Button
+        <div className="row-center review">
+          <ScoreBoard isGameComplete={true} />
+          <Button
           onClick={this.handleRestartGame}
           color="green"
-          icon="home"
-          content="Go to Game"
+          icon="game"
+          content="Back to Game"
         />
+        </div>
+       
       </React.Fragment>
     );
   }

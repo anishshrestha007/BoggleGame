@@ -82,7 +82,7 @@ class DashBoard extends React.Component {
               name="userName"
             />
             <Divider />
-            <div className="rowC">
+            <div className="rowC board-options">
               <Dropdown
                 placeholder="4 * 4"
                 fluid

@@ -10,10 +10,11 @@ import {
 } from "../../store/actions/gameAction";
 import "../css/BoggleGame.css";
 import { Grid, Card, Button, Label, Image } from "semantic-ui-react";
-import ProfilePic from "../../../assets/images/ProfilePic.jpg";
+
 import ScoreBoard from "./ScoreBoard";
 import { showToast } from "../generics/Toast";
 import { isSubmitValid } from "../../utils/gameUtil";
+import Timer from "../generics/Timer";
 
 class BoggleGame extends React.Component {
   constructor(props) {
@@ -174,22 +175,40 @@ class BoggleGame extends React.Component {
     return (
       <React.Fragment>
         {boggleData && (
-          <div class="rowC">
-            <Card centered color="orange" raised={true}>
+          <div class="row-center">
+            <Card color="orange" raised={true}>
               <Card.Content>
                 <Card.Header textAlign="center" color="orange">
-                  <Image floated="left" size="mini" src={ProfilePic} />{" "}
-                  {gameInfo.userName}
-                  <Button
-                    onClick={this.handleShuffleDeck}
-                    basic
-                    icon="recycle"
-                  />
-                  <Button onClick={this.handleUndoDeck} basic icon="undo" />
-                  <Button onClick={this.handleResetClick} basic>
-                    {" "}
-                    Reset{" "}
-                  </Button>
+                  <div className="card-header-custom">
+                    {gameInfo.isGameComplete ? (
+                      "Game Completed"
+                    ) : (
+                      <Button
+                        icon="time"
+                        label={{
+                          as: "a",
+                          basic: true,
+                          content: (
+                            <Timer
+                              timeValue={gameInfo.gameTime}
+                              timerEnded={this.gameEnded}
+                            />
+                          )
+                        }}
+                        labelPosition="right"
+                      />
+                    )}
+                    <Button
+                      onClick={this.handleShuffleDeck}
+                      basic
+                      icon="recycle"
+                    />
+                    <Button onClick={this.handleUndoDeck} basic icon="undo" />
+                    <Button onClick={this.handleResetClick} basic>
+                      {" "}
+                      Reset{" "}
+                    </Button>
+                  </div>
                 </Card.Header>
                 <Grid columns={gameInfo.size} celled={true} textAlign="center">
                   {chunckedLetters.map((letters, index) => (
