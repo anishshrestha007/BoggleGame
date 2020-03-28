@@ -110,7 +110,7 @@ class BoggleGame extends React.Component {
   };
   handleUndoDeck = () => {
     const { selectedCells, selectedLetters, prevCell, word } = this.state;
-    debugger;
+
     if (prevCell)
       this.setState(
         prevState => ({
@@ -269,7 +269,6 @@ class BoggleGame extends React.Component {
     );
   }
 }
-
 
 const structuredSelector = createStructuredSelector({
   gameInfo: state => state.game.gameInfo
