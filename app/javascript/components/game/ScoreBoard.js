@@ -10,7 +10,7 @@ class ScoreBoard extends React.Component {
   render() {
     const { gameInfo, showResult } = this.props;
     return (
-      <Card color="orange" raised={true}>
+      <Card id= "scoreCard" color="orange" raised={true}>
         <Card.Content>
           <Card.Header textAlign="center" color="orange">
             <div className="user-info">
@@ -19,7 +19,7 @@ class ScoreBoard extends React.Component {
             </div>
           </Card.Header>
           <div className="table-div-wrapper">
-            <Table color={"orange"} key={"orange"}>
+            <Table id="scoreTable" color={"orange"} key={"orange"}>
               <Table.Header>
                 <Table.Row>
                   <Table.HeaderCell>Word</Table.HeaderCell>

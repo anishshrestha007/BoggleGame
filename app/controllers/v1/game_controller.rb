@@ -101,10 +101,6 @@ class V1::GameController < ApplicationController
     render json: response_data, status: status
   end
 
-  #######################################
-  # HELPER METHODS
-  #######################################
-
   def is_number?(string)
     true if Float(string) rescue false
   end

@@ -1,0 +1,90 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Boggle reducer test should handle check word request 1`] = `
+Object {
+  "gameInfo": Object {
+    "correctAttempts": 1,
+    "data": null,
+    "gameTime": 3,
+    "inCorrectAttempts": 0,
+    "isComplete": false,
+    "isCorrect": true,
+    "maxWord": 10,
+    "minWord": 3,
+    "size": 4,
+    "totalAttepts": 1,
+    "totalscore": 0,
+    "userName": "",
+    "version": "v1",
+    "words": Array [
+      Object {
+        "score": undefined,
+        "word": undefined,
+      },
+    ],
+  },
+}
+`;
+
+exports[`Boggle reducer test should handle game complete request 1`] = `
+Object {
+  "gameInfo": Object {
+    "correctAttempts": 0,
+    "data": null,
+    "gameTime": 3,
+    "inCorrectAttempts": 0,
+    "isComplete": true,
+    "isCorrect": false,
+    "maxWord": 10,
+    "minWord": 3,
+    "size": 4,
+    "totalAttepts": 0,
+    "totalscore": 0,
+    "userName": "",
+    "version": "v1",
+    "words": Array [],
+  },
+}
+`;
+
+exports[`Boggle reducer test should handle get game data request 1`] = `
+Object {
+  "gameInfo": Object {
+    "correctAttempts": 0,
+    "data": undefined,
+    "gameTime": 3,
+    "inCorrectAttempts": 0,
+    "isComplete": false,
+    "isCorrect": false,
+    "maxWord": 10,
+    "minWord": 3,
+    "size": 4,
+    "totalAttepts": 0,
+    "totalscore": 0,
+    "userName": "",
+    "version": "v1",
+    "words": Array [],
+  },
+}
+`;
+
+exports[`Boggle reducer test should handle start game request 1`] = `
+Object {
+  "gameInfo": Object {
+    "correctAttempts": 0,
+    "data": null,
+    "gameTime": 3,
+    "inCorrectAttempts": 0,
+    "isComplete": false,
+    "isCorrect": false,
+    "maxWord": 10,
+    "minWord": 3,
+    "size": 4,
+    "totalAttepts": 0,
+    "totalscore": 0,
+    "userName": "Anish Shrestha",
+    "version": "v1",
+    "words": Array [],
+  },
+}
+`;

@@ -36,7 +36,7 @@ class DashBoard extends React.Component {
   handleDropDownChange = (e, data) => {
     this.setState({ size: data.value });
   };
-  handleStartGame = (event, data) => {
+  handleStartGame = (event, {value}) => {
     const { userName, size, error } = this.state;
 
     var history = this.props.history;
@@ -78,8 +78,9 @@ class DashBoard extends React.Component {
               error={error}
               iconPosition="left"
               placeholder="Enter you name here"
-              onChange={this.handleChange}
+              onChange={this.handleChange.bind(this)}
               name="userName"
+              id="uinput"
             />
             <Divider />
             <div className="rowC board-options">
@@ -99,6 +100,7 @@ class DashBoard extends React.Component {
                 color="green"
                 icon="play"
                 content="Play"
+                id = "play"
               />
             </div>
           </Card.Content>

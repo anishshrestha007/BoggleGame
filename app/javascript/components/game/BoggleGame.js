@@ -270,9 +270,7 @@ class BoggleGame extends React.Component {
   }
 }
 
-BoggleGame.propTypes = {
-  boggleParam: PropTypes.string
-};
+
 const structuredSelector = createStructuredSelector({
   gameInfo: state => state.game.gameInfo
 });
