@@ -23,11 +23,10 @@ class TransitionComponent extends Component {
 
   render() {
     const { animation, duration, visible } = this.state;
-    debugger;
 
     return (
       <Transition animation={animation} duration={duration} visible={visible}>
-        <Label color='teal'> {this.props.childComponent} </Label>
+        <Label color="teal"> {this.props.childComponent} </Label>
       </Transition>
     );
   }

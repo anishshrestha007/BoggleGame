@@ -1,7 +1,7 @@
 import React from "react";
 import ScoreBoard from "./ScoreBoard";
-import { Image, Button } from "semantic-ui-react";
-import Balloons from "../../../assets/images/Balloons.gif";
+import {  Button } from "semantic-ui-react";
+
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import "../css/BoggleGame.css";
@@ -31,8 +31,9 @@ class GameReview extends React.Component {
             icon="game"
             content="Back to Game"
           />
+         
         </div>
-        <Image size='small' src={Balloons} />
+       
       </React.Fragment>
     );
   }

@@ -105,3 +105,16 @@
   width:150px;
   margin-top:15px;
 }
+.row-center.review .content{
+  position: relative;
+}
+.row-center.review .content:before{
+  position: absolute;
+  content: '';
+  display: block;
+  background: url(/packs/media/images/Balloons-d2fdbd06.gif) no-repeat;
+  top: -80px;
+  left: -320px;  
+  width: 320px;
+  height: 320px;
+}
