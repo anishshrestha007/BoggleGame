@@ -1,4 +1,10 @@
-import { START_GAME, GET_GAME_DATA, CHECK_WORD, COMPLETE_GAME } from "../types";
+import {
+  START_GAME,
+  GET_GAME_DATA,
+  CHECK_WORD,
+  COMPLETE_GAME,
+  RESET_GAME
+} from "../types";
 
 export const initialState = {
   gameInfo: {
@@ -31,7 +37,13 @@ export function gameReducer(state = initialState, action) {
           version: action.game.version,
           gameTime: action.game.gameTime,
           maxWord: action.game.maxWord,
-          minWord: action.game.minWord
+          minWord: action.game.minWord,
+          isCorrect: false,
+          totalscore: 0,
+          isComplete: false,
+          totalAttepts: 0,
+          correctAttempts: 0,
+          inCorrectAttempts: 0
         }
       };
     case GET_GAME_DATA:
@@ -60,6 +72,29 @@ export function gameReducer(state = initialState, action) {
             isCorrect: false,
             totalscore: 0,
             isComplete: action.game.isComplete,
+            totalAttepts: 0,
+            correctAttempts: 0,
+            inCorrectAttempts: 0
+          }
+        };
+      }
+
+    case RESET_GAME:
+      if (action.game.reset) {
+        return {
+          ...state,
+          gameInfo: {
+            userName: "",
+            size: 4,
+            maxWord: 10,
+            minWord: 3,
+            data: null,
+            version: "v1",
+            gameTime: 3,
+            words: [],
+            isCorrect: false,
+            totalscore: 0,
+            isComplete: false,
             totalAttepts: 0,
             correctAttempts: 0,
             inCorrectAttempts: 0

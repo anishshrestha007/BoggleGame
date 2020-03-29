@@ -1,4 +1,4 @@
-import { START_GAME, GET_GAME_DATA, CHECK_WORD, COMPLETE_GAME } from "../types";
+import { START_GAME, GET_GAME_DATA, CHECK_WORD, COMPLETE_GAME ,RESET_GAME} from "../types";
 import { showToast } from "../../components/generics/Toast";
 import { boggleService } from "../../services/boggleService";
 import _ from "lodash";
@@ -65,6 +65,18 @@ export const getGameData = (gameInfo, callBack) => {
   };
 };
 
+export const resetGameData = (reset,callBack) => {
+  return dispatch => {
+    dispatch({
+      type: RESET_GAME,
+      game: {
+        reset: reset
+      }
+    });
+    callBack && callBack();
+  };
+};
+
 export const completeGame = (ended, callBack) => {
   return dispatch => {
     dispatch({
@@ -76,6 +88,7 @@ export const completeGame = (ended, callBack) => {
     callBack && ended && callBack();
   };
 };
+
 
 export const checkWord = (version, word, callBack) => {
   return dispatch => {

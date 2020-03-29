@@ -6,7 +6,8 @@ import { createStructuredSelector } from "reselect";
 import {
   getGameData,
   checkWord,
-  completeGame
+  completeGame,
+  resetGameData
 } from "../../store/actions/gameAction";
 import "../css/BoggleGame.css";
 import { Grid, Card, Button, Label, Image } from "semantic-ui-react";
@@ -24,7 +25,8 @@ class BoggleGame extends React.Component {
       selectedLetters: "",
       prevCell: null,
       boggleData: null,
-      word: ""
+      word: "",
+      resetGame: true
     };
   }
   componentDidMount() {
@@ -32,6 +34,9 @@ class BoggleGame extends React.Component {
       this.props.getGameData(this.props.gameInfo, resp => {
         this.setState({ boggleData: resp.game_data.split("") });
       });
+  }
+  componentWillUnmount() {
+    this.props.resetGameData && this.props.resetGameData(this.state.resetGame);
   }
   handleCellClick = (selectedLetter, selected, rowId, colId) => {
     console.log(rowId + " * " + colId);
@@ -131,7 +136,9 @@ class BoggleGame extends React.Component {
       );
   };
   gameEnded = () => {
-    this.completeGame(true);
+    this.setState({ resetGame: false }, () => {
+      this.completeGame(true);
+    });
   };
   handleRestartGame = () => {
     this.completeGame(false);
@@ -273,5 +280,10 @@ class BoggleGame extends React.Component {
 const structuredSelector = createStructuredSelector({
   gameInfo: state => state.game.gameInfo
 });
-const mapDispatchToProps = { getGameData, checkWord, completeGame };
+const mapDispatchToProps = {
+  getGameData,
+  checkWord,
+  completeGame,
+  resetGameData
+};
 export default connect(structuredSelector, mapDispatchToProps)(BoggleGame);
