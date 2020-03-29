@@ -33,6 +33,4 @@ describe("DashBoard Testing", () => {
     let userInput = wrapper.find("Input");
     expect(userInput.length).toEqual(1);
   });
-
-
 });
