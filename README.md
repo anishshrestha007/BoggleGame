@@ -4,8 +4,6 @@
 
 This is a [Ruby on Rails](https://rubyonrails.org/) and [React.js](https://reactjs.org/) based implementation of the **Boggle** game.
 
-[Check out the demo on Heroku](https://ruby-react-boggle.herokuapp.com/)
-
 ## Built with
 
 - Ruby 2.6.5
