@@ -1,10 +1,12 @@
 import React from "react";
 import ScoreBoard from "./ScoreBoard";
 import { Image, Button } from "semantic-ui-react";
-import ProfilePic from "../../../assets/images/ProfilePic.jpg";
+import Balloons from "../../../assets/images/Balloons.gif";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import "../css/BoggleGame.css";
+import { reviewMsg } from "../../utils/gameUtil";
+import TransitionComponent from "../generics/TransitionComponent.js";
 class GameReview extends React.Component {
   handleRestartGame = () => {
     var history = this.props.history;
@@ -15,15 +17,22 @@ class GameReview extends React.Component {
     return (
       <React.Fragment>
         <div className="row-center review">
+          <TransitionComponent
+            animation="jiggle"
+            duration={500}
+            visible={true}
+            childComponent = {reviewMsg(gameInfo.totalscore)}
+          />
+
           <ScoreBoard showResult={true} />
           <Button
-          onClick={this.handleRestartGame}
-          color="green"
-          icon="game"
-          content="Back to Game"
-        />
+            onClick={this.handleRestartGame}
+            color="green"
+            icon="game"
+            content="Back to Game"
+          />
         </div>
-       
+        <Image size='small' src={Balloons} />
       </React.Fragment>
     );
   }
